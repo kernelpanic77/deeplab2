@@ -134,6 +134,7 @@ DatasetDescriptor = collections.namedtuple(
         'ignore_depth',
     ]
 )
+# what is ignore label value here ? 
 
 CITYSCAPES_PANOPTIC_INFORMATION = DatasetDescriptor(
     dataset_name=_CITYSCAPES_PANOPTIC,

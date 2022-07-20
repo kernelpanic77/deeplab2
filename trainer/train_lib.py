@@ -34,6 +34,8 @@ from deeplab2.trainer import trainer as trainer_lib
 from deeplab2.video import motion_deeplab
 from deeplab2.video import vip_deeplab
 
+# what are instance layer names
+
 _INSTANCE_LAYER_NAMES = (common.CKPT_MOTION_REGRESSION_HEAD_LAST_LAYER,
                          common.CKPT_INSTANCE_REGRESSION_HEAD_LAST_LAYER,
                          common.CKPT_INSTANCE_CENTER_HEAD_LAST_LAYER)
@@ -100,7 +102,9 @@ def run_experiment(mode: Text, config: config_pb2.ExperimentOptions,
     ValueError: If mode includes `eval` and num_gpus > 1. Currently, evaluation
       is not supported on more than a single GPU.
   """
+    # tpu stuff 
   strategy = distribution_utils.create_strategy(tpu, num_gpus)
+
   logging.info('Using strategy %s with %d replicas', type(strategy),
                strategy.num_replicas_in_sync)
 
@@ -120,9 +124,13 @@ def run_experiment(mode: Text, config: config_pb2.ExperimentOptions,
   ignore_depth = dataset.MAP_NAME_TO_DATASET_INFO[dataset_name].ignore_depth
   class_has_instances_list = (
       dataset.MAP_NAME_TO_DATASET_INFO[dataset_name].class_has_instances_list)
+  # checkpoint 
 
   trainer = None
   evaluator = None
+
+  # learn more about strategy.scope()
+
   with strategy.scope():
     deeplab_model = create_deeplab_model(
         config, dataset.MAP_NAME_TO_DATASET_INFO[dataset_name])
